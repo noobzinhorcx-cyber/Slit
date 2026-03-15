@@ -1,20 +1,16 @@
 // http-server.js
-// Servidor HTTP que responde /svr com a lista de servidores
-// e faz proxy de WebSocket para o servidor do jogo na porta 8080
-
 const http = require('http');
 const net  = require('net');
 const dns  = require('dns');
 
 const PORT      = process.env.PORT || 10000;
 const GAME_PORT = 8080;
-const OWN_HOST  = 'slither-v677.onrender.com';
+const OWN_HOST  = 'slit-y6jm.onrender.com';
 
-// Codifica IP + porta no formato do slither.io
 function encodeServerList(ip, port) {
   const parts = ip.split('.').map(Number);
   const bytes = [...parts, (port >> 8) & 0xFF, port & 0xFF];
-  let result = 'a'; // indicador de versão
+  let result = 'a';
   for (const b of bytes) {
     result += String.fromCharCode(((b >> 4) & 0xF) + 97);
     result += String.fromCharCode(( b       & 0xF) + 97);
@@ -22,11 +18,10 @@ function encodeServerList(ip, port) {
   return result;
 }
 
-// Servidor HTTP
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
-  if (req.url === '/svr') {
+  if (req.url === '/server') {
     dns.lookup(OWN_HOST, (err, ip) => {
       if (err) {
         console.error('DNS error:', err);
@@ -45,7 +40,6 @@ const server = http.createServer((req, res) => {
   }
 });
 
-// Proxy de WebSocket para o servidor do jogo (porta 8080)
 server.on('upgrade', (req, clientSocket, head) => {
   const gameSocket = net.createConnection(GAME_PORT, '127.0.0.1', () => {
     let headers = '';
