@@ -1,0 +1,15 @@
+{
+  "name": "slither",
+  "version": "0.0.11",
+  "description": "An open source implementation of the slither.io server",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"node http-server.js\" \"node index.js\"",
+    "game": "node index.js"
+  },
+  "dependencies": {
+    "coffeescript": "*",
+    "concurrently": "^8.0.0"
+  },
+  "license": "MIT"
+}
